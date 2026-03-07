@@ -76,7 +76,8 @@ export const DashboardJamaah = () => {
   // Document form state  
   const [documentData, setDocumentData] = useState({
     documentType: "",
-    description: ""
+    description: "",
+    expiryDate: ""
   })
   const [documentFile, setDocumentFile] = useState(null)
   const [profileData, setProfileData] = useState({
@@ -119,7 +120,7 @@ export const DashboardJamaah = () => {
 
   const handleUploadDocumentDirect = (docType) => {
     setSelectedDocumentType(docType)
-    setDocumentData((prev) => ({ ...prev, documentType: docType }))
+    setDocumentData((prev) => ({ ...prev, documentType: docType, expiryDate: "" }))
     setShowDocumentModal(true)
   }
 
@@ -479,6 +480,16 @@ export const DashboardJamaah = () => {
       return
     }
 
+    const requiresExpiryDate = ["Paspor", "Sertifikat Vaksin"].includes(documentData.documentType)
+    if (requiresExpiryDate && !documentData.expiryDate) {
+      toast({
+        title: "Tanggal kedaluwarsa wajib diisi",
+        description: "Isi tanggal kedaluwarsa untuk Paspor atau Sertifikat Vaksin.",
+        variant: "destructive"
+      })
+      return
+    }
+
     setIsUploading(true)
     setUploadProgress(0)
 
@@ -491,6 +502,7 @@ export const DashboardJamaah = () => {
         jamaah_id: currentJamaahId,
         document_type: documentData.documentType,
         status: 'pending',
+        expiry_date: requiresExpiryDate ? documentData.expiryDate : null,
       })
 
       const createdDoc = createdDocRes?.data || createdDocRes?.document || createdDocRes
@@ -517,7 +529,7 @@ export const DashboardJamaah = () => {
       })
 
       // Reset form
-      setDocumentData({ documentType: "", description: "" })
+      setDocumentData({ documentType: "", description: "", expiryDate: "" })
       setDocumentFile(null)
       setShowDocumentModal(false)
       setUploadProgress(0)
@@ -535,6 +547,42 @@ export const DashboardJamaah = () => {
     } finally {
       setIsUploading(false)
     }
+  }
+
+  const paymentDestinationMap = {
+    "Transfer BCA": {
+      methodLabel: "Transfer BCA",
+      accountNumber: "1234567890",
+      accountName: "PT Niat Umroh Indonesia",
+    },
+    "Transfer BRI": {
+      methodLabel: "Transfer BRI",
+      accountNumber: "9876543210",
+      accountName: "PT Niat Umroh Indonesia",
+    },
+    "Transfer Mandiri": {
+      methodLabel: "Transfer Mandiri",
+      accountNumber: "1122334455",
+      accountName: "PT Niat Umroh Indonesia",
+    },
+    "Transfer BNI": {
+      methodLabel: "Transfer BNI",
+      accountNumber: "5566778899",
+      accountName: "PT Niat Umroh Indonesia",
+    },
+    "E-Wallet": {
+      methodLabel: "E-Wallet",
+      accountNumber: "087874790441",
+      accountName: "Niat Umroh",
+    },
+  }
+
+  const normalizedPaymentMethod = String(paymentData.paymentMethod || "").trim().toLowerCase()
+  const showPaymentDestination = Boolean(normalizedPaymentMethod) && normalizedPaymentMethod !== "cash"
+  const selectedPaymentDestination = paymentDestinationMap[paymentData.paymentMethod] || {
+    methodLabel: paymentData.paymentMethod || "Metode Pembayaran",
+    accountNumber: "-",
+    accountName: "Niat Umroh",
   }
 
   // Komponen untuk section pilih paket
@@ -1097,12 +1145,12 @@ export const DashboardJamaah = () => {
                             <DollarSign className="h-5 w-5 text-blue-700" />
                           </div>
                           <div>
-                            <h4 className="font-semibold">Pembayaran Cicilan</h4>
-                            <p className="text-sm text-gray-600">Jatuh tempo: {tabunganData.nextPayment}</p>
+                            <h4 className="font-semibold">Jadwal Nabung Berikutnya</h4>
+                            <p className="text-sm text-gray-600">Tanggal : {tabunganData.nextPayment}</p>
                           </div>
                         </div>
                         <Button size="sm" onClick={handlePayNow}>
-                          Bayar Sekarang
+                          Nabung Sekarang
                         </Button>
                       </div>
                       )}
@@ -1230,7 +1278,7 @@ export const DashboardJamaah = () => {
                             <div>
                               <h4 className="font-semibold text-yellow-800">Pembayaran Selanjutnya</h4>
                               <p className="text-sm text-yellow-700">
-                                Rp{tabunganData.paymentAmount.toLocaleString("id-ID")} pada {tabunganData.nextPayment}
+                                 pada {tabunganData.nextPayment}
                               </p>
                             </div>
                             <Button 
@@ -1434,15 +1482,30 @@ export const DashboardJamaah = () => {
                         </div>
                       )}
                     </div>
-                    
                     <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
                       <div className="flex items-start gap-3">
                         <FileText className="h-5 w-5 text-blue-600 mt-0.5" />
+
                         <div>
-                          <h4 className="font-semibold text-blue-800">Tips Dokumen</h4>
+                          <h4 className="font-semibold text-blue-800">
+                            Dokumen yang Harus Dilengkapi
+                          </h4>
+
+                          <ul className="text-sm text-blue-700 space-y-1 mt-2">
+                            <li>• Paspor (masa berlaku minimal 6 bulan)</li>
+                            <li>• KTP</li>
+                            <li>• Kartu Keluarga (KK)</li>
+                            <li>• Foto 4x6 background putih</li>
+                            <li>• Sertifikat Vaksin</li>
+                          </ul>
+
+                          <h4 className="font-semibold text-blue-800 mt-4">
+                            Tips Upload Dokumen
+                          </h4>
+
                           <ul className="text-sm text-blue-700 space-y-1 mt-2">
                             <li>• Pastikan foto dokumen jelas dan terbaca</li>
-                            <li>• Format file: JPG/PNG/PDF (max 2MB)</li>
+                            <li>• Format file: JPG / PNG / PDF (max 2MB)</li>
                             <li>• Upload minimal 3 bulan sebelum keberangkatan</li>
                             <li>• Periksa masa berlaku paspor minimal 6 bulan</li>
                           </ul>
@@ -1718,6 +1781,16 @@ export const DashboardJamaah = () => {
           </div>
         </div>
 
+        {showPaymentDestination && (
+          <div className="p-4 rounded-lg border bg-blue-50 border-blue-200">
+            <p className="text-sm font-medium text-blue-800">No Rek Tujuan</p>
+            <p className="text-lg font-bold text-blue-900 mt-1">{selectedPaymentDestination.accountNumber}</p>
+            <p className="text-sm text-blue-700 mt-1">
+              {selectedPaymentDestination.methodLabel} a.n {selectedPaymentDestination.accountName}
+            </p>
+          </div>
+        )}
+
         <div>
           <label className="block text-sm font-medium mb-2">
             Keterangan
@@ -1784,7 +1857,7 @@ export const DashboardJamaah = () => {
       onClose={() => {
         setShowDocumentModal(false)
         setSelectedDocumentType("")
-        setDocumentData({ documentType: "", description: "" })
+        setDocumentData({ documentType: "", description: "", expiryDate: "" })
         setDocumentFile(null)
         setUploadProgress(0)
       }}
@@ -1812,6 +1885,20 @@ export const DashboardJamaah = () => {
             <option value="Lainnya">Lainnya</option>
           </select>
         </div>
+
+        {["Paspor", "Sertifikat Vaksin"].includes(documentData.documentType) && (
+          <div>
+            <label className="block text-sm font-medium mb-2">
+              Tanggal Kedaluwarsa *
+            </label>
+            <Input
+              type="date"
+              value={documentData.expiryDate}
+              onChange={(e) => setDocumentData({ ...documentData, expiryDate: e.target.value })}
+              disabled={isUploading}
+            />
+          </div>
+        )}
 
         <div>
           <label className="block text-sm font-medium mb-2">
@@ -1845,7 +1932,7 @@ export const DashboardJamaah = () => {
             onClick={() => {
               setShowDocumentModal(false)
               setSelectedDocumentType("")
-              setDocumentData({ documentType: "", description: "" })
+              setDocumentData({ documentType: "", description: "", expiryDate: "" })
               setDocumentFile(null)
             }}
             disabled={isUploading}
