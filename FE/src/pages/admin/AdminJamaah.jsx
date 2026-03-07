@@ -418,12 +418,34 @@ export const AdminJamaah = () => {
     const map = new Map()
     const formatter = new Intl.DateTimeFormat("id-ID", { month: "long", year: "numeric" })
 
+    const parseRegistrationDate = (value) => {
+      if (!value) return null
+
+      // ISO format or native date-compatible string
+      let parsed = new Date(value)
+      if (!Number.isNaN(parsed.getTime())) return parsed
+
+      // Fallback for "d F Y" format (e.g. "15 January 2025")
+      const match = String(value).match(/^(\d{1,2})\s+([A-Za-z]+)\s+(\d{4})$/)
+      if (!match) return null
+
+      const [, day, monthName, year] = match
+      parsed = new Date(`${monthName} ${day}, ${year}`)
+      return Number.isNaN(parsed.getTime()) ? null : parsed
+    }
+
     jamaahData.forEach((j) => {
-      const dateValue = j.created_at || j.registration_date || j.createdAt
+      const dateValue =
+        j.registration_date ||
+        j.registrationDate ||
+        j.joinDate ||
+        j.created_at ||
+        j.createdAt
+
       if (!dateValue) return
 
-      const date = new Date(dateValue)
-      if (Number.isNaN(date.getTime())) return
+      const date = parseRegistrationDate(dateValue)
+      if (!date) return
 
       const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`
       const existing = map.get(key)

@@ -312,6 +312,21 @@ export const DashboardJamaah = () => {
       setIsSavingProfile(false)
     }
   }
+
+  const calculateReturnDate = (departureDate, durationText) => {
+    if (!departureDate) return null
+
+    const departure = new Date(departureDate)
+    if (Number.isNaN(departure.getTime())) return null
+
+    const durationDays = Number(String(durationText || "").match(/\d+/)?.[0] || 0)
+    if (!durationDays) return null
+
+    const returnDate = new Date(departure)
+    returnDate.setDate(returnDate.getDate() + Math.max(durationDays - 1, 0))
+
+    return returnDate.toISOString().split("T")[0]
+  }
   
   // Fetch all data from API
   useEffect(() => {
@@ -344,14 +359,30 @@ export const DashboardJamaah = () => {
         // Set activities from payments
         setActivities(paymentsRes)
         
-        // Set travel data from jamaah's package
-        if (jamaahRes && jamaahRes.travelPackage) {
+        // Set travel data from jamaah's package (database)
+        const selectedPackageId = jamaahRes?.travelPackage?.id || jamaahRes?.travel_package_id || jamaahRes?.travelPackageId
+        const packageFromList = Array.isArray(packagesData)
+          ? packagesData.find((p) => String(p.id) === String(selectedPackageId || ""))
+          : null
+        const pkg = jamaahRes?.travelPackage || packageFromList
+
+        if (pkg) {
+          const departureDate = pkg.departureDate || pkg.departure_date || pkg.date || null
+          const returnDate = pkg.returnDate || pkg.return_date || calculateReturnDate(departureDate, pkg.duration)
+
           setTravelData({
-            package: jamaahRes.travelPackage.name,
-            departureDate: jamaahRes.travelPackage.departureDate,
-            duration: jamaahRes.travelPackage.duration,
-            status: jamaahRes.status,
+            package: pkg.name || "Paket Umroh",
+            packageType: pkg.bestFor || pkg.best_for || "Paket Umroh",
+            departureDate: departureDate || "Menunggu penjadwalan",
+            returnDate: returnDate || "Menunggu penjadwalan",
+            duration: pkg.duration || "Belum ditentukan",
+            status: jamaahRes?.status || pkg.status || "Menunggu konfirmasi",
+            flight: pkg.airline || pkg.flight || "Menunggu info maskapai",
+            hotelMakkah: pkg.hotelMakkah || pkg.hotel_makkah || pkg.hotel || "Belum ditentukan",
+            hotelMadinah: pkg.hotelMadinah || pkg.hotel_madinah || "Belum ditentukan",
           })
+        } else {
+          setTravelData(null)
         }
         
       } catch (error) {
@@ -686,15 +717,15 @@ export const DashboardJamaah = () => {
                     Fasilitas Utama:
                   </p>
                   <ul className="space-y-1 text-sm">
-                    {pkg.features && Array.isArray(pkg.features) && pkg.features.slice(0, 4).map((feature, idx) => (
+                    {pkg.features && Array.isArray(pkg.features) && pkg.features.slice(0, 6).map((feature, idx) => (
                       <li key={idx} className="flex items-center">
                         <CheckCircle className="h-4 w-4 text-green-500 mr-2 shrink-0" />
                         <span className="text-gray-700">{feature}</span>
                       </li>
                     ))}
-                    {pkg.features && pkg.features.length > 4 && (
+                    {pkg.features && pkg.features.length > 6 && (
                       <li className="text-primary text-sm font-medium cursor-pointer hover:underline">
-                        +{pkg.features.length - 4} fasilitas lainnya
+                        +{pkg.features.length - 6} fasilitas lainnya
                       </li>
                     )}
                   </ul>
@@ -1364,7 +1395,7 @@ export const DashboardJamaah = () => {
                         <div className="flex items-center justify-between">
                           <div>
                             <h3 className="text-xl font-bold">{travelData.package}</h3>
-                            <p className="text-sm text-gray-600">Paket Premium</p>
+                            <p className="text-sm text-gray-600">{travelData.packageType || "Paket Umroh"}</p>
                           </div>
                           <Badge className="bg-green-100 text-green-800">
                             {travelData.status}
