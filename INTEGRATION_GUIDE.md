@@ -49,17 +49,24 @@
 # Masuk ke folder BE
 cd BE
 
-# Pastikan migrations sudah dijalankan
+composer install
+
+cp .env.example .env
+
 php artisan migrate
 
-# Jalankan seeders untuk data contoh
+php artisan key:generate
+
 php artisan db:seed
+
+php artisan storage:link
 
 # Start Laravel server
 php artisan serve
 # Server akan berjalan di http://localhost:8000
 ```
 
+Beda Terminal
 ### 2. Frontend Setup
 
 ```bash
