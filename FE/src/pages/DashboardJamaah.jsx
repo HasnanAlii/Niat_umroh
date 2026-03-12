@@ -1578,6 +1578,7 @@ export const DashboardJamaah = () => {
           <div>
             <label className="block text-sm font-medium mb-2">Nama</label>
             <Input
+              placeholder="Masukkan nama"
               value={profileData.name}
               onChange={(e) => setProfileData({ ...profileData, name: e.target.value })}
               disabled={isSavingProfile}
@@ -1586,6 +1587,7 @@ export const DashboardJamaah = () => {
           <div>
             <label className="block text-sm font-medium mb-2">Email</label>
             <Input
+              placeholder="Masukkan email"
               type="email"
               value={profileData.email}
               onChange={(e) => setProfileData({ ...profileData, email: e.target.value })}
@@ -1597,6 +1599,7 @@ export const DashboardJamaah = () => {
         <div>
           <label className="block text-sm font-medium mb-2">Nomor Telepon</label>
           <Input
+            placeholder="Masukkan nomor telepon"
             value={profileData.phone}
             onChange={(e) => setProfileData({ ...profileData, phone: e.target.value })}
             disabled={isSavingProfile}
@@ -1606,6 +1609,7 @@ export const DashboardJamaah = () => {
         <div>
           <label className="block text-sm font-medium mb-2">Alamat</label>
           <Textarea
+            placeholder="Masukkan alamat lengkap" 
             rows={3}
             value={profileData.address}
             onChange={(e) => setProfileData({ ...profileData, address: e.target.value })}

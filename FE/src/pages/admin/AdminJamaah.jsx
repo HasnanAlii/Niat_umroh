@@ -838,18 +838,18 @@ export const AdminJamaah = () => {
       <div className="space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium mb-2">Nama Lengkap *</label>
+            <label className="block text-sm font-medium mb-2">Nama Lengkap <span className="text-red-500">*</span></label>
             <Input
-              placeholder="Nama lengkap"
+              placeholder="Masukkan nama lengkap"
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
               disabled={isSubmitting}
             />
           </div>
           <div>
-            <label className="block text-sm font-medium mb-2">NIK *</label>
+            <label className="block text-sm font-medium mb-2">NIK <span className="text-red-500">*</span></label>
             <Input
-              placeholder="16 digit NIK"
+              placeholder="Masukkan 16 digit NIK"
               value={formData.nik}
               onChange={(e) => setFormData({ ...formData, nik: e.target.value })}
               disabled={isSubmitting}
@@ -860,19 +860,20 @@ export const AdminJamaah = () => {
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium mb-2">Email</label>
+            <label className="block text-sm font-medium mb-2">Email <span className="text-red-500">*</span></label>
             <Input
               type="email"
-              placeholder="email@example.com"
+              placeholder="Masukkan email"
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
               disabled={isSubmitting}
             />
+            <p className="text-xs text-gray-500 mt-1">Password Jamaah default adalah "password"</p>
           </div>
           <div>
-            <label className="block text-sm font-medium mb-2">Telepon *</label>
+            <label className="block text-sm font-medium mb-2">Telepon <span className="text-red-500">*</span></label>
             <Input
-              placeholder="08xxxxxxxxxx"
+              placeholder="Masukkan nomor telepon"
               value={formData.phone}
               onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
               disabled={isSubmitting}
@@ -881,9 +882,9 @@ export const AdminJamaah = () => {
         </div>
         
         <div>
-          <label className="block text-sm font-medium mb-2">Alamat</label>
+          <label className="block text-sm font-medium mb-2">Alamat <span className="text-red-500">*</span></label>
           <Textarea
-            placeholder="Alamat lengkap"
+            placeholder="Masukkan alamat lengkap"
             value={formData.address}
             onChange={(e) => setFormData({ ...formData, address: e.target.value })}
             disabled={isSubmitting}
@@ -952,18 +953,18 @@ export const AdminJamaah = () => {
       <div className="space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium mb-2">Nama Lengkap *</label>
+            <label className="block text-sm font-medium mb-2">Nama Lengkap <span className="text-red-500">*</span></label>
             <Input
-              placeholder="Nama lengkap"
+              placeholder="Masukan nama lengkap"
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
               disabled={isSubmitting}
             />
           </div>
           <div>
-            <label className="block text-sm font-medium mb-2">NIK *</label>
+            <label className="block text-sm font-medium mb-2">NIK <span className="text-red-500">*</span></label>
             <Input
-              placeholder="16 digit NIK"
+              placeholder="Masukan 16 digit NIK"
               value={formData.nik}
               onChange={(e) => setFormData({ ...formData, nik: e.target.value })}
               disabled={isSubmitting}
@@ -974,19 +975,19 @@ export const AdminJamaah = () => {
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium mb-2">Email</label>
+            <label className="block text-sm font-medium mb-2">Email <span className="text-red-500">*</span></label>
             <Input
               type="email"
-              placeholder="email@example.com"
+              placeholder="Masukan email"
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
               disabled={isSubmitting}
             />
           </div>
           <div>
-            <label className="block text-sm font-medium mb-2">Telepon *</label>
+            <label className="block text-sm font-medium mb-2">Telepon <span className="text-red-500">*</span></label>
             <Input
-              placeholder="08xxxxxxxxxx"
+              placeholder="Masukan nomor telepon"
               value={formData.phone}
               onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
               disabled={isSubmitting}
@@ -995,9 +996,9 @@ export const AdminJamaah = () => {
         </div>
         
         <div>
-          <label className="block text-sm font-medium mb-2">Alamat</label>
+          <label className="block text-sm font-medium mb-2">Alamat <span className="text-red-500">*</span></label>
           <Textarea
-            placeholder="Alamat lengkap"
+            placeholder="Masukan alamat lengkap"
             value={formData.address}
             onChange={(e) => setFormData({ ...formData, address: e.target.value })}
             disabled={isSubmitting}

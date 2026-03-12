@@ -678,10 +678,10 @@ export const AdminTravel = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium mb-2">
-                Nama Paket *
+                Nama Paket <span className="text-red-500">*</span>
               </label>
               <Input
-                placeholder="Contoh: Paket Umroh Regular 9 Hari"
+                placeholder="Masukan nama paket"
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 disabled={submitting}
@@ -690,11 +690,11 @@ export const AdminTravel = () => {
             
             <div>
               <label className="block text-sm font-medium mb-2">
-                Harga (Rp) *
+                Harga (Rp) <span className="text-red-500">*</span>
               </label>
               <Input
                 type="number"
-                placeholder="35000000"
+                placeholder="Masukan harga paket"
                 value={formData.price}
                 onChange={(e) => setFormData({ ...formData, price: e.target.value })}
                 disabled={submitting}
@@ -703,10 +703,10 @@ export const AdminTravel = () => {
             
             <div>
               <label className="block text-sm font-medium mb-2">
-                Durasi *
+                Durasi <span className="text-red-500">*</span>
               </label>
               <Input
-                placeholder="Contoh: 9 Hari 8 Malam"
+                placeholder="Masukan durasi perjalanan"
                 value={formData.duration}
                 onChange={(e) => setFormData({ ...formData, duration: e.target.value })}
                 disabled={submitting}
@@ -715,7 +715,7 @@ export const AdminTravel = () => {
             
             <div>
               <label className="block text-sm font-medium mb-2">
-                Tanggal Keberangkatan *
+                Tanggal Keberangkatan   <span className="text-red-500">*</span>
               </label>
               <Input
                 type="date"
@@ -727,11 +727,11 @@ export const AdminTravel = () => {
             
             <div className="md:col-span-2">
               <label className="block text-sm font-medium mb-2">
-                Kuota Jamaah *
+                Kuota Jamaah <span className="text-red-500">*</span>
               </label>
               <Input
                 type="number"
-                placeholder="45"
+                placeholder="Masukan jumlah kuota maksimal"
                 value={formData.quota}
                 onChange={(e) => setFormData({ ...formData, quota: e.target.value })}
                 disabled={submitting}
@@ -744,7 +744,7 @@ export const AdminTravel = () => {
               Deskripsi
             </label>
             <Textarea
-              placeholder="Detail paket umroh (opsional)"
+              placeholder="Masukan detail paket umroh (opsional)"
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
               rows={4}
@@ -800,10 +800,10 @@ export const AdminTravel = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium mb-2">
-                Nama Paket *
+                Nama Paket <span className="text-red-500">*</span>
               </label>
               <Input
-                placeholder="Nama paket"
+                placeholder="Masukan nama paket"
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 disabled={submitting}
@@ -812,11 +812,11 @@ export const AdminTravel = () => {
             
             <div>
               <label className="block text-sm font-medium mb-2">
-                Harga (Rp) *
+                Harga (Rp) <span className="text-red-500">*</span>
               </label>
               <Input
                 type="number"
-                placeholder="Harga"
+                placeholder="Masukan harga paket"
                 value={formData.price}
                 onChange={(e) => setFormData({ ...formData, price: e.target.value })}
                 disabled={submitting}
@@ -825,10 +825,10 @@ export const AdminTravel = () => {
             
             <div>
               <label className="block text-sm font-medium mb-2">
-                Durasi *
+                Durasi <span className="text-red-500">*</span>
               </label>
               <Input
-                placeholder="Durasi"
+                placeholder="Masukan durasi perjalanan"
                 value={formData.duration}
                 onChange={(e) => setFormData({ ...formData, duration: e.target.value })}
                 disabled={submitting}
@@ -837,7 +837,7 @@ export const AdminTravel = () => {
             
             <div>
               <label className="block text-sm font-medium mb-2">
-                Tanggal Keberangkatan *
+                Tanggal Keberangkatan <span className="text-red-500">*</span>
               </label>
               <Input
                 type="date"
@@ -849,11 +849,11 @@ export const AdminTravel = () => {
             
             <div className="md:col-span-2">
               <label className="block text-sm font-medium mb-2">
-                Kuota Jamaah *
+                Kuota Jamaah <span className="text-red-500">*</span>
               </label>
               <Input
                 type="number"
-                placeholder="Kuota"
+                placeholder="Masukan jumlah kuota maksimal"
                 value={formData.quota}
                 onChange={(e) => setFormData({ ...formData, quota: e.target.value })}
                 disabled={submitting}
@@ -866,7 +866,7 @@ export const AdminTravel = () => {
               Deskripsi
             </label>
             <Textarea
-              placeholder="Detail paket"
+              placeholder="Masukan detail paket"
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
               rows={4}

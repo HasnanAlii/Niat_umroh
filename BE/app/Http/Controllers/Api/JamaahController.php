@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Jamaah;
+use App\Models\User;
 use App\Http\Resources\JamaahResource;
 use Illuminate\Http\Request;
 
@@ -40,6 +41,20 @@ class JamaahController extends Controller
             'status' => 'nullable|in:pending,confirmed,completed,cancelled',
         ]);
 
+        // Create user account for Jamaah
+        $user = User::create([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'password' => 'password', // Will be hashed by model mutator
+            'role' => 'jamaah',
+        ]);
+
+
+        // Add user_id to Jamaah
+        $validated['user_id'] = $user->id;
+
+        $registeredDate = now();
+        $validated['registration_date'] = $registeredDate;
         $jamaah = Jamaah::create($validated);
         return new JamaahResource($jamaah);
     }

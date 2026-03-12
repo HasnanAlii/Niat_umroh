@@ -685,10 +685,10 @@ export const AdminTempat = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium mb-2">
-                Nama Tempat *
+                Nama Tempat <span className="text-red-500">*</span>
               </label>
               <Input
-                placeholder="Contoh: Hotel Hilton Makkah"
+                placeholder="Makkah Nama Tempat"
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 disabled={submitting}
@@ -697,7 +697,7 @@ export const AdminTempat = () => {
             
             <div>
               <label className="block text-sm font-medium mb-2">
-                Tipe *
+                Tipe <span className="text-red-500">*</span>
               </label>
               <select
                 className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
@@ -715,10 +715,10 @@ export const AdminTempat = () => {
             
             <div>
               <label className="block text-sm font-medium mb-2">
-                Lokasi *
+                Lokasi <span className="text-red-500">*</span>
               </label>
               <Input
-                placeholder="Contoh: Makkah"
+                placeholder="Masukkan lokasi "
                 value={formData.location}
                 onChange={(e) => setFormData({ ...formData, location: e.target.value })}
                 disabled={submitting}
@@ -727,14 +727,14 @@ export const AdminTempat = () => {
             
             <div>
               <label className="block text-sm font-medium mb-2">
-                Rating
+                Rating <span className="text-red-500">*</span>
               </label>
               <Input
                 type="number"
                 step="0.1"
                 min="0"
                 max="5"
-                placeholder="5.0"
+                placeholder="Masukkan rating (0-5)"
                 value={formData.rating}
                 onChange={(e) => setFormData({ ...formData, rating: e.target.value })}
                 disabled={submitting}
@@ -744,10 +744,10 @@ export const AdminTempat = () => {
           
           <div>
             <label className="block text-sm font-medium mb-2">
-              Alamat Lengkap
+              Alamat Lengkap <span className="text-red-500">*</span>
             </label>
             <Input
-              placeholder="Alamat detail"
+              placeholder="Masukkan alamat lengkap"
               value={formData.address}
               onChange={(e) => setFormData({ ...formData, address: e.target.value })}
               disabled={submitting}
@@ -759,7 +759,7 @@ export const AdminTempat = () => {
               Deskripsi
             </label>
             <Textarea
-              placeholder="Detail tempat (opsional)"
+              placeholder="Masukkan detail tempat (opsional)"
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
               rows={3}
@@ -815,10 +815,10 @@ export const AdminTempat = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium mb-2">
-                Nama Tempat *
+                Nama Tempat <span className="text-red-500">*</span>
               </label>
               <Input
-                placeholder="Nama tempat"
+                placeholder="Masukkan nama tempat"
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 disabled={submitting}
@@ -827,7 +827,7 @@ export const AdminTempat = () => {
             
             <div>
               <label className="block text-sm font-medium mb-2">
-                Tipe *
+                Tipe <span className="text-red-500">*</span>
               </label>
               <select
                 className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
@@ -845,10 +845,10 @@ export const AdminTempat = () => {
             
             <div>
               <label className="block text-sm font-medium mb-2">
-                Lokasi *
+                Lokasi <span className="text-red-500">*</span>
               </label>
               <Input
-                placeholder="Lokasi"
+                placeholder="Masukkan lokasi"
                 value={formData.location}
                 onChange={(e) => setFormData({ ...formData, location: e.target.value })}
                 disabled={submitting}
@@ -857,14 +857,14 @@ export const AdminTempat = () => {
             
             <div>
               <label className="block text-sm font-medium mb-2">
-                Rating
+                Rating <span className="text-red-500">*</span>
               </label>
               <Input
                 type="number"
                 step="0.1"
                 min="0"
                 max="5"
-                placeholder="Rating"
+                placeholder="Masukkan rating (0-5)"
                 value={formData.rating}
                 onChange={(e) => setFormData({ ...formData, rating: e.target.value })}
                 disabled={submitting}
@@ -874,10 +874,10 @@ export const AdminTempat = () => {
           
           <div>
             <label className="block text-sm font-medium mb-2">
-              Alamat Lengkap
+              Alamat Lengkap <span className="text-red-500">*</span>
             </label>
             <Input
-              placeholder="Alamat"
+              placeholder="Masukkan alamat lengkap"
               value={formData.address}
               onChange={(e) => setFormData({ ...formData, address: e.target.value })}
               disabled={submitting}
@@ -889,7 +889,7 @@ export const AdminTempat = () => {
               Deskripsi
             </label>
             <Textarea
-              placeholder="Detail tempat"
+              placeholder="Masukkan detail tempat (opsional)"
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
               rows={3}

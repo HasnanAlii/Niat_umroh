@@ -124,9 +124,9 @@ export const AdminDashboard = () => {
   }
 
   const formatCurrency = (amount) => {
-    if (amount >= 1000000000) return (amount / 1000000000).toFixed(1) + 'M'
-    if (amount >= 1000000) return (amount / 1000000).toFixed(1) + ' jt'
-    if (amount >= 1000) return (amount / 1000).toFixed(0) + ' rb'
+    if (amount >= 1000000000) return (amount / 1000000000).toFixed(1) +'M'
+    if (amount >= 1000000) return (amount / 1000000).toFixed(1) + 'jt'
+    if (amount >= 1000) return (amount / 1000).toFixed(0) + 'rb'
     return String(amount)
   }
 

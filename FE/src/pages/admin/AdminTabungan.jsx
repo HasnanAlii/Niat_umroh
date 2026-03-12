@@ -325,9 +325,9 @@ const filteredTabungan = tabunganData.filter((item) => {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-600">Total Tabungan Aktif</p>
+                  <p className="text-sm font-medium text-gray-600">Total Tabungan</p>
                   <p className="text-2xl font-bold mt-2">
-                    Rp{(stats.totalTabungan / 1000000).toFixed(1)}M
+                    Rp {(stats.totalTabungan / 1000000).toFixed(1)}Jt
                   </p>
                   <p className="text-sm text-green-600 mt-1">Total dari semua jamaah</p>
                 </div>
@@ -744,10 +744,10 @@ const filteredTabungan = tabunganData.filter((item) => {
           
           <div>
             <label className="block text-sm font-medium mb-2">
-              Alasan Penolakan *
+              Alasan Penolakan <span className="text-red-500">*</span>
             </label>
             <Textarea
-              placeholder="Contoh: Bukti pembayaran tidak jelas, jumlah tidak sesuai, dll."
+              placeholder="Masukkan alasan penolakan..."
               value={rejectReason}
               onChange={(e) => setRejectReason(e.target.value)}
               rows={4}
