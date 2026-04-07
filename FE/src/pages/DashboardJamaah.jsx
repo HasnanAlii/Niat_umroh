@@ -702,20 +702,38 @@ export const DashboardJamaah = () => {
               </CardHeader>
               
               <CardContent className="space-y-4">
+               {/* Package Photo */}
+                <div className="rounded-lg overflow-hidden border border-gray-100 bg-gray-50">
+                  <img
+                    src={
+                      pkg.photo && typeof pkg.photo === 'string' && pkg.photo.trim() !== ''
+                        ? pkg.photo
+                        : (pkg.image && typeof pkg.image === 'string' && pkg.image.trim() !== ''
+                          ? pkg.image
+                          : (pkg.thumbnail && typeof pkg.thumbnail === 'string' && pkg.thumbnail.trim() !== ''
+                            ? pkg.thumbnail
+                            : "/images/default-umroh.jpg"))
+                    }
+                    alt={pkg.name || "Foto Paket"}
+                    className="w-full h-150 object-cover"
+                    onError={(e) => {
+                      e.currentTarget.onerror = null
+                      e.currentTarget.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='176' viewBox='0 0 400 176'%3E%3Crect width='400' height='176' fill='%23f0f4ff'/%3E%3Ccircle cx='200' cy='70' r='30' fill='%23c7d7ff'/%3E%3Cellipse cx='200' cy='176' rx='80' ry='50' fill='%23c7d7ff'/%3E%3Ccircle cx='200' cy='60' r='18' fill='%23a5b8ff'/%3E%3Crect x='135' y='100' width='130' height='10' rx='5' fill='%23a5b8ff'/%3E%3Crect x='155' y='118' width='90' height='8' rx='4' fill='%23c7d7ff'/%3E%3Ctext x='200' y='155' font-family='sans-serif' font-size='12' fill='%236b7fc4' text-anchor='middle'%3EPaket Umroh%3C/text%3E%3C/svg%3E"
+                    }}
+                  />
+                </div>
+
                 {/* Price */}
                 <div className="text-center p-4 bg-primary/5 rounded-lg">
                   <p className="text-3xl font-bold text-primary">
                     {formatShortCurrency(pkg.price)}
+     
                   </p>
-                  <p className="text-sm text-gray-600">Per orang • Cicilan tersedia</p>
-                </div>
-                
+                  </div>
+
                 {/* Features */}
-                <div>
-                  <p className="font-medium mb-2 flex items-center gap-2">
-                    <Gift className="h-4 w-4" />
-                    Fasilitas Utama:
-                  </p>
+                <div className="space-y-2">
+                  <p className="text-sm font-medium">Fasilitas Utama:</p>
                   <ul className="space-y-1 text-sm">
                     {pkg.features && Array.isArray(pkg.features) && pkg.features.slice(0, 6).map((feature, idx) => (
                       <li key={idx} className="flex items-center">
@@ -731,6 +749,8 @@ export const DashboardJamaah = () => {
                   </ul>
                 </div>
                 
+      
+
                 {/* Package Info */}
                 <div className="grid grid-cols-2 gap-4 text-sm">
                   <div className="flex items-center gap-2">
@@ -751,14 +771,14 @@ export const DashboardJamaah = () => {
                     <HotelIcon className="h-4 w-4 text-gray-500" />
                     <div>
                       <p className="font-medium">Hotel</p>
-                      <p className="text-gray-600">Bintang 5</p>
+                      <p className="text-gray-600">{pkg.hotel || '-'}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
                     <Plane className="h-4 w-4 text-gray-500" />
                     <div>
                       <p className="font-medium">Maskapai</p>
-                      <p className="text-gray-600">Saudi Airlines</p>
+                      <p className="text-gray-600">{pkg.airline || '-'}</p>
                     </div>
                   </div>
                 </div>

@@ -16,7 +16,7 @@ class AccommodationSeeder extends Seeder
         $accommodations = [
             [
                 'name' => 'Hotel Movenpick Makkah',
-                'type' => 'Hotel',
+                'type' => 'hotel Mekah',
                 'location' => 'Makkah',
                 'rating' => 4.8,
                 'capacity' => '200 kamar',
@@ -27,7 +27,7 @@ class AccommodationSeeder extends Seeder
             ],
             [
                 'name' => 'Hotel Hilton Madinah',
-                'type' => 'Hotel',
+                'type' => 'hotel Madinah',
                 'location' => 'Madinah',
                 'rating' => 4.7,
                 'capacity' => '150 kamar',
@@ -38,7 +38,7 @@ class AccommodationSeeder extends Seeder
             ],
             [
                 'name' => 'Bandara Soekarno-Hatta',
-                'type' => 'Bandara',
+                'type' => 'Maskapai',
                 'location' => 'Jakarta',
                 'rating' => 4.3,
                 'capacity' => '500 penumpang/hari',
@@ -49,7 +49,7 @@ class AccommodationSeeder extends Seeder
             ],
             [
                 'name' => 'Maktab 45 Aziziyah',
-                'type' => 'Pemondokan',
+                'type' => 'hotel Mekah',
                 'location' => 'Makkah',
                 'rating' => 4.2,
                 'capacity' => '300 jamaah',
@@ -60,7 +60,7 @@ class AccommodationSeeder extends Seeder
             ],
             [
                 'name' => 'Ritz Carlton Makkah',
-                'type' => 'Hotel',
+                'type' => 'hotel Madinah',
                 'location' => 'Makkah',
                 'rating' => 4.9,
                 'capacity' => '180 kamar',

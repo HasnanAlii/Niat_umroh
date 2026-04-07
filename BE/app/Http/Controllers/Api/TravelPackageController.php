@@ -34,14 +34,20 @@ class TravelPackageController extends Controller
             'hotel_makkah' => 'nullable|string',
             'hotel_madinah' => 'nullable|string',
             'airline' => 'nullable|string',
+            'accommodation_id' => 'nullable|exists:accommodations,id',
+            'photo' => 'nullable|image|max:2048',
         ]);
 
         $validated['booked'] = 0;
         $validated['available'] = $validated['quota'];
         $validated['rating'] = 0;
 
+        if ($request->hasFile('photo')) {
+            $path = $request->file('photo')->store('travel_packages', 'public');
+            $validated['photo'] = $path;
+        }
+
         $package = TravelPackage::create($validated);
-        
         return new TravelPackageResource($package);
     }
 
@@ -69,10 +75,16 @@ class TravelPackageController extends Controller
             'quota' => 'sometimes|integer',
             'departure_date' => 'sometimes|date',
             'status' => 'sometimes|in:Aktif,Coming Soon,Hampir Penuh,Penuh,Non-Aktif',
+            'accommodation_id' => 'nullable|exists:accommodations,id',
+            'photo' => 'nullable|image|max:2048',
         ]);
 
+        if ($request->hasFile('photo')) {
+            $path = $request->file('photo')->store('travel_packages', 'public');
+            $validated['photo'] = $path;
+        }
+
         $package->update($validated);
-        
         return new TravelPackageResource($package);
     }
 

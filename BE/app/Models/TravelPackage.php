@@ -24,7 +24,13 @@ class TravelPackage extends Model
         'highlights',
         'best_for',
         'description',
+        'photo',
+        'accommodation_id',
     ];
+    public function accommodation()
+    {
+        return $this->belongsTo(Accommodation::class);
+    }
 
     protected $casts = [
         'price' => 'decimal:2',

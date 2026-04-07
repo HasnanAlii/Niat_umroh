@@ -28,7 +28,9 @@ return new class extends Migration
             $table->json('features')->nullable();
             $table->json('highlights')->nullable();
             $table->string('best_for')->nullable();
+            $table->string('photo')->nullable();
             $table->text('description')->nullable();
+            $table->foreignId('accommodation_id')->nullable()->constrained()->onDelete('set null');
             $table->timestamps();
         });
     }

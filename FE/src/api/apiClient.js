@@ -293,19 +293,42 @@ const apiClient = {
 
   // Packages CRUD
   async createPackage(data) {
-    return apiCall(ENDPOINTS.PACKAGES, {
-      method: 'POST',
-      headers: createHeaders(true),
-      body: JSON.stringify(data),
-    });
+    let options = { method: 'POST', headers: createHeaders(true) };
+    // Jika ada file (photo), gunakan FormData
+    if (data.photo) {
+      const formData = new FormData();
+      Object.entries(data).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          formData.append(key, value);
+        }
+      });
+      options.body = formData;
+      // Hapus Content-Type agar browser set otomatis
+      delete options.headers['Content-Type'];
+    } else {
+      options.body = JSON.stringify(data);
+    }
+    return apiCall(ENDPOINTS.PACKAGES, options);
   },
 
   async updatePackage(id, data) {
-    return apiCall(`${ENDPOINTS.PACKAGES}/${id}`, {
-      method: 'PUT',
-      headers: createHeaders(true),
-      body: JSON.stringify(data),
-    });
+    let options = { method: 'POST', headers: createHeaders(true) };
+    // Laravel biasanya PATCH/PUT, tapi FormData kadang perlu POST + _method
+    if (data.photo) {
+      const formData = new FormData();
+      Object.entries(data).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          formData.append(key, value);
+        }
+      });
+      formData.append('_method', 'PUT');
+      options.body = formData;
+      delete options.headers['Content-Type'];
+    } else {
+      options.method = 'PUT';
+      options.body = JSON.stringify(data);
+    }
+    return apiCall(`${ENDPOINTS.PACKAGES}/${id}`, options);
   },
 
   async deletePackage(id) {

@@ -55,8 +55,28 @@ export const AdminTravel = () => {
     duration: "",
     departure_date: "",
     quota: "",
-    description: ""
+    description: "",
+    accommodation_id: "",
+    hotel_makkah: "",
+    hotel_madinah: "",
+    airline: ""
   })
+
+  // Accommodations state
+  const [accommodations, setAccommodations] = useState([])
+
+  // Fetch accommodations
+  useEffect(() => {
+    const fetchAccommodations = async () => {
+      try {
+        const data = await apiClient.getAccommodations()
+        setAccommodations(Array.isArray(data) ? data : [])
+      } catch (error) {
+        console.error("Error loading accommodations:", error)
+      }
+    }
+    fetchAccommodations()
+  }, [])
 
   const fetchPackages = async () => {
     try {
@@ -474,7 +494,7 @@ export const AdminTravel = () => {
           </div>
 
           {/* Status Filter */}
-          <div className="flex gap-2 mt-4 overflow-x-auto pb-2">
+          {/* <div className="flex gap-2 mt-4 overflow-x-auto pb-2">
             <Button
               variant={statusFilter === "semua" ? "default" : "outline"}
               size="sm"
@@ -503,7 +523,7 @@ export const AdminTravel = () => {
             >
               Coming Soon
             </Button>
-          </div>
+          </div> */}
         </CardHeader>
         
         <CardContent>
@@ -525,8 +545,8 @@ export const AdminTravel = () => {
                   <TableHead>Harga</TableHead>
                   <TableHead>Kuota</TableHead>
                   <TableHead>Keberangkatan</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Aksi</TableHead>
+                  {/* <TableHead>Status</TableHead> */}
+                  <TableHead className="text-center">Aksi</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -557,11 +577,11 @@ export const AdminTravel = () => {
                         <p className="text-sm text-gray-600">{item.hotel || 'Hotel Bintang 5'}</p>
                       </div>
                     </TableCell>
-                    <TableCell>
+                    {/* <TableCell>
                       {getStatusBadge(deriveStatus(item))}
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex gap-1">
+                    </TableCell> */}
+                    <TableCell className="text-center">
+                      <div className="flex gap-1 justify-center">
                         <Button
                           variant="ghost"
                           size="sm"
@@ -737,6 +757,96 @@ export const AdminTravel = () => {
                 disabled={submitting}
               />
             </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-2">Hotel Mekah</label>
+              <select
+                className="w-full border rounded px-3 py-2"
+                value={formData.hotel_makkah}
+                onChange={e => setFormData({ ...formData, hotel_makkah: e.target.value })}
+                disabled={submitting}
+              >
+                <option value="">Pilih Hotel Mekah</option>
+                {accommodations.filter(a => a.type === 'hotel Mekah').map(a => (
+                  <option key={a.id} value={a.name}>{a.name}</option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-2">Hotel Madinah</label>
+              <select
+                className="w-full border rounded px-3 py-2"
+                value={formData.hotel_madinah}
+                onChange={e => setFormData({ ...formData, hotel_madinah: e.target.value })}
+                disabled={submitting}
+              >
+                <option value="">Pilih Hotel Madinah</option>
+                {accommodations.filter(a => a.type === 'hotel Madinah').map(a => (
+                  <option key={a.id} value={a.name}>{a.name}</option>
+                ))}
+              </select>
+            </div>
+            <div className="md:col-span-2">
+              <label className="block text-sm font-medium mb-2">Penerbangan</label>
+              <select
+                className="w-full border rounded px-3 py-2"
+                value={formData.airline}
+                onChange={e => setFormData({ ...formData, airline: e.target.value })}
+                disabled={submitting}
+              >
+                <option value="">Pilih Maskapai</option>
+                {accommodations.filter(a => a.type === 'Maskapai').map(a => (
+                  <option key={a.id} value={a.name}>{a.name}</option>
+                ))}
+              </select>
+            </div>
+            {/* Foto Paket Travel - styled upload zone */}
+            <div className="md:col-span-2">
+              <label className="block text-sm font-medium mb-2">Foto Paket Travel</label>
+              <label
+                className={`flex flex-col items-center justify-center gap-2 w-full border-2 border-dashed rounded-xl px-4 py-6 cursor-pointer transition-all ${
+                  submitting
+                    ? 'opacity-50 cursor-not-allowed border-gray-200 bg-gray-50'
+                    : 'border-primary/40 bg-primary/5 hover:bg-primary/10 hover:border-primary'
+                }`}
+              >
+                <div className="flex flex-col items-center gap-1 text-center">
+                  <div className="p-3 bg-primary/10 rounded-full">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5V19a1.5 1.5 0 001.5 1.5h15A1.5 1.5 0 0021 19v-2.5M16.5 8.5L12 4m0 0L7.5 8.5M12 4v12" />
+                    </svg>
+                  </div>
+                  <p className="text-sm font-medium text-primary">
+                    {formData.photo instanceof File ? formData.photo.name : 'Klik untuk pilih gambar'}
+                  </p>
+                  <p className="text-xs text-gray-400">PNG, JPG, WEBP — maks. 5MB</p>
+                </div>
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={e => setFormData({ ...formData, photo: e.target.files[0] })}
+                  disabled={submitting}
+                />
+              </label>
+              {formData.photo instanceof File && (
+                <div className="mt-2 flex items-center justify-between px-3 py-2 bg-green-50 border border-green-200 rounded-lg">
+                  <div className="flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span className="text-xs text-green-700 font-medium truncate max-w-xs">{formData.photo.name}</span>
+                  </div>
+                  <button
+                    type="button"
+                    className="text-xs text-red-500 hover:text-red-700 ml-2"
+                    onClick={() => setFormData({ ...formData, photo: null })}
+                  >
+                    Hapus
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
           
           <div>
@@ -858,6 +968,109 @@ export const AdminTravel = () => {
                 onChange={(e) => setFormData({ ...formData, quota: e.target.value })}
                 disabled={submitting}
               />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-2">Hotel Mekah</label>
+              <select
+                className="w-full border rounded px-3 py-2"
+                value={formData.hotel_makkah}
+                onChange={e => setFormData({ ...formData, hotel_makkah: e.target.value })}
+                disabled={submitting}
+              >
+                <option value="">Pilih Hotel Mekah</option>
+                {accommodations.filter(a => a.type === 'hotel Mekah').map(a => (
+                  <option key={a.id} value={a.name}>{a.name}</option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-2">Hotel Madinah</label>
+              <select
+                className="w-full border rounded px-3 py-2"
+                value={formData.hotel_madinah}
+                onChange={e => setFormData({ ...formData, hotel_madinah: e.target.value })}
+                disabled={submitting}
+              >
+                <option value="">Pilih Hotel Madinah</option>
+                {accommodations.filter(a => a.type === 'hotel Madinah').map(a => (
+                  <option key={a.id} value={a.name}>{a.name}</option>
+                ))}
+              </select>
+            </div>
+            <div className="md:col-span-2">
+              <label className="block text-sm font-medium mb-2">Penerbangan</label>
+              <select
+                className="w-full border rounded px-3 py-2"
+                value={formData.airline}
+                onChange={e => setFormData({ ...formData, airline: e.target.value })}
+                disabled={submitting}
+              >
+                <option value="">Pilih Maskapai</option>
+                {accommodations.filter(a => a.type === 'Bandara').map(a => (
+                  <option key={a.id} value={a.name}>{a.name}</option>
+                ))}
+              </select>
+            </div>
+            {/* Foto Paket Travel - styled upload zone with existing preview */}
+            <div className="md:col-span-2">
+              <label className="block text-sm font-medium mb-2">Foto Paket Travel</label>
+              {formData.photo && typeof formData.photo === 'string' && (
+                <div className="mb-3 rounded-xl overflow-hidden border-2 border-blue-100 shadow-sm relative group">
+                  <img
+                    src={formData.photo}
+                    alt="Foto saat ini"
+                    className="w-full h-44 object-cover"
+                    onError={(e) => { e.currentTarget.style.display = 'none' }}
+                  />
+                  <div className="absolute bottom-0 left-0 right-0 bg-linear-to-t from-black/60 to-transparent px-3 py-2">
+                    <p className="text-xs text-white font-medium">📷 Foto saat ini — upload baru untuk mengganti</p>
+                  </div>
+                </div>
+              )}
+              <label
+                className={`flex flex-col items-center justify-center gap-2 w-full border-2 border-dashed rounded-xl px-4 py-6 cursor-pointer transition-all ${
+                  submitting
+                    ? 'opacity-50 cursor-not-allowed border-gray-200 bg-gray-50'
+                    : 'border-primary/40 bg-primary/5 hover:bg-primary/10 hover:border-primary'
+                }`}
+              >
+                <div className="flex flex-col items-center gap-1 text-center">
+                  <div className="p-3 bg-primary/10 rounded-full">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5V19a1.5 1.5 0 001.5 1.5h15A1.5 1.5 0 0021 19v-2.5M16.5 8.5L12 4m0 0L7.5 8.5M12 4v12" />
+                    </svg>
+                  </div>
+                  <p className="text-sm font-medium text-primary">
+                    {formData.photo instanceof File ? formData.photo.name : (formData.photo ? 'Ganti dengan gambar baru' : 'Klik untuk pilih gambar')}
+                  </p>
+                  <p className="text-xs text-gray-400">PNG, JPG, WEBP — maks. 5MB</p>
+                </div>
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={e => setFormData({ ...formData, photo: e.target.files[0] })}
+                  disabled={submitting}
+                />
+              </label>
+              {formData.photo instanceof File && (
+                <div className="mt-2 flex items-center justify-between px-3 py-2 bg-green-50 border border-green-200 rounded-lg">
+                  <div className="flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span className="text-xs text-green-700 font-medium truncate max-w-xs">{formData.photo.name}</span>
+                  </div>
+                  <button
+                    type="button"
+                    className="text-xs text-red-500 hover:text-red-700 ml-2"
+                    onClick={() => setFormData({ ...formData, photo: null })}
+                  >
+                    Hapus
+                  </button>
+                </div>
+              )}
             </div>
           </div>
           
@@ -984,54 +1197,79 @@ export const AdminTravel = () => {
         size="lg"
       >
         {selectedPackage && (
-          <div className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <p className="text-sm text-gray-600">Nama Paket</p>
-                <p className="font-medium">{selectedPackage.name || "-"}</p>
-              </div>
-              <div>
-                <p className="text-sm text-gray-600">Status</p>
-                <div className="mt-1">{getStatusBadge(deriveStatus(selectedPackage))}</div>
-              </div>
-              <div>
-                <p className="text-sm text-gray-600">Harga</p>
-                <p className="font-medium">Rp{Number(selectedPackage.price || 0).toLocaleString("id-ID")}</p>
-              </div>
-              <div>
-                <p className="text-sm text-gray-600">Durasi</p>
-                <p className="font-medium">{selectedPackage.duration || "-"}</p>
-              </div>
-              <div>
-                <p className="text-sm text-gray-600">Tanggal Keberangkatan</p>
-                <p className="font-medium">{selectedPackage.departure_date || selectedPackage.date || "-"}</p>
-              </div>
-              <div>
-                <p className="text-sm text-gray-600">Hotel</p>
-                <p className="font-medium">{selectedPackage.hotel || "-"}</p>
-              </div>
-              <div>
-                <p className="text-sm text-gray-600">Kuota</p>
-                <p className="font-medium">{selectedPackage.quota || 0} jamaah</p>
-              </div>
-              <div>
-                <p className="text-sm text-gray-600">Sudah Terdaftar</p>
-                <p className="font-medium">{selectedPackage.booked || 0} jamaah</p>
+          <div className="space-y-5">
+
+            {/* Photo */}
+            <div className="rounded-xl overflow-hidden border border-gray-100 bg-gray-50 relative">
+              <img
+                src={selectedPackage.photo}
+                alt={selectedPackage.name}
+                className="w-full h-150 object-cover"
+                onError={(e) => {
+                  e.currentTarget.onerror = null
+                  e.currentTarget.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='208' viewBox='0 0 400 208'%3E%3Crect width='400' height='208' fill='%23f0f4ff'/%3E%3Ccircle cx='200' cy='85' r='35' fill='%23c7d7ff'/%3E%3Ccircle cx='200' cy='73' r='22' fill='%23a5b8ff'/%3E%3Crect x='125' y='122' width='150' height='12' rx='6' fill='%23a5b8ff'/%3E%3Crect x='145' y='142' width='110' height='9' rx='4' fill='%23c7d7ff'/%3E%3Ctext x='200' y='178' font-family='sans-serif' font-size='13' fill='%236b7fc4' text-anchor='middle'%3EPaket Umroh%3C/text%3E%3C/svg%3E"
+                }}
+              />
+              {/* Status badge overlay */}
+              <div className="absolute top-3 right-3">
+                {getStatusBadge(deriveStatus(selectedPackage))}
               </div>
             </div>
 
-            {selectedPackage.description && (
+            {/* Header info */}
+            <div className="flex items-start justify-between gap-4">
               <div>
-                <p className="text-sm text-gray-600">Deskripsi</p>
-                <p className="font-medium">{selectedPackage.description}</p>
+                <h3 className="text-lg font-bold text-gray-900">{selectedPackage.name || "-"}</h3>
+                <p className="text-2xl font-bold text-primary mt-1">
+                  Rp{Number(selectedPackage.price || 0).toLocaleString("id-ID")}
+                  <span className="text-sm font-normal text-gray-500 ml-1">/ orang</span>
+                </p>
               </div>
-            )}
+            </div>
 
-            <div className="pt-2">
+            {/* Info Grid */}
+            <div className="grid grid-cols-2 gap-3">
+              <div className="p-3 bg-gray-50 rounded-lg">
+                <p className="text-xs text-gray-500 mb-1">Durasi</p>
+                <p className="font-semibold text-sm">{selectedPackage.duration || "-"}</p>
+              </div>
+              <div className="p-3 bg-gray-50 rounded-lg">
+                <p className="text-xs text-gray-500 mb-1">Keberangkatan</p>
+                <p className="font-semibold text-sm">{selectedPackage.departure_date || selectedPackage.date || "-"}</p>
+              </div>
+              <div className="p-3 bg-gray-50 rounded-lg">
+                <p className="text-xs text-gray-500 mb-1">Hotel Mekah</p>
+                <p className="font-semibold text-sm">{selectedPackage.hotelMakkah || selectedPackage.hotel || "-"}</p>
+              </div>
+              <div className="p-3 bg-gray-50 rounded-lg">
+                <p className="text-xs text-gray-500 mb-1">Hotel Madinah</p>
+                <p className="font-semibold text-sm">{selectedPackage.hotelMadinah || "-"}</p>
+              </div>
+              <div className="p-3 bg-gray-50 rounded-lg">
+                <p className="text-xs text-gray-500 mb-1">Maskapai</p>
+                <p className="font-semibold text-sm">{selectedPackage.airline || "-"}</p>
+              </div>
+              <div className="p-3 bg-gray-50 rounded-lg">
+                <p className="text-xs text-gray-500 mb-1">Kuota</p>
+                <p className="font-semibold text-sm">{selectedPackage.booked || 0} / {selectedPackage.quota || 0} jamaah</p>
+              </div>
+            </div>
+
+            {/* Quota Bar */}
+            <div>
               <QuotaBar booked={selectedPackage.booked || 0} quota={selectedPackage.quota || 0} />
             </div>
 
-            <div className="flex gap-3 pt-4">
+            {/* Description */}
+            {selectedPackage.description && (
+              <div className="p-4 bg-blue-50 border border-blue-100 rounded-lg">
+                <p className="text-xs font-semibold text-blue-700 mb-1 uppercase tracking-wide">Deskripsi</p>
+                <p className="text-sm text-gray-700 leading-relaxed">{selectedPackage.description}</p>
+              </div>
+            )}
+
+            {/* Action buttons */}
+            <div className="flex gap-3 pt-2">
               <Button
                 variant="outline"
                 className="flex-1"

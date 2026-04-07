@@ -10,6 +10,7 @@ class Accommodation extends Model
         'name',
         'type',
         'location',
+        'address',
         'rating',
         'capacity',
         'price',

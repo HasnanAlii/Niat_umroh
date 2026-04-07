@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('accommodations', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->enum('type', ['Hotel', 'Bandara', 'Pemondokan', 'Transport'])->default('Hotel');
+            $table->enum('type', ['hotel Mekah', 'Maskapai', 'hotel Madinah'])->default('hotel Mekah');
             $table->string('location');
             $table->decimal('rating', 3, 2)->default(0);
             $table->string('capacity')->nullable();

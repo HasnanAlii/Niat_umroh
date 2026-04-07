@@ -37,14 +37,22 @@ class AccommodationController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'type' => 'required|in:Hotel,Bandara,Pemondokan,Transport',
-            'location' => 'required|string',
-            'rating' => 'nullable|numeric|min:0|max:5',
-            'capacity' => 'nullable|string',
-            'price' => 'nullable|string',
-            'status' => 'in:Aktif,Coming Soon,Non-Aktif',
+            'name'        => 'required|string|max:255',
+            'type'        => 'required|in:hotel Mekah,hotel Madinah,Bandara,Maskapai',
+            'location'    => 'required|string',
+            'address'     => 'nullable|string',
+            'rating'      => 'nullable|numeric|min:0|max:5',
+            'capacity'    => 'nullable|string',
+            'price'       => 'nullable|string',
+            'status'      => 'nullable|in:Aktif,Coming Soon,Non-Aktif',
+            'facilities'  => 'nullable|array',
+            'facilities.*'=> 'string',
+            'description' => 'nullable|string',
+            'image'       => 'nullable|string',
         ]);
+
+        // Default status
+        $validated['status'] = $validated['status'] ?? 'Aktif';
 
         $accommodation = Accommodation::create($validated);
         
@@ -69,11 +77,18 @@ class AccommodationController extends Controller
         $accommodation = Accommodation::findOrFail($id);
         
         $validated = $request->validate([
-            'name' => 'sometimes|string|max:255',
-            'type' => 'sometimes|in:Hotel,Bandara,Pemondokan,Transport',
-            'location' => 'sometimes|string',
-            'rating' => 'sometimes|numeric|min:0|max:5',
-            'status' => 'sometimes|in:Aktif,Coming Soon,Non-Aktif',
+            'name'        => 'sometimes|string|max:255',
+            'type'        => 'sometimes|in:hotel Mekah,hotel Madinah,Bandara,Maskapai',
+            'location'    => 'sometimes|string',
+            'address'     => 'nullable|string',
+            'rating'      => 'nullable|numeric|min:0|max:5',
+            'capacity'    => 'nullable|string',
+            'price'       => 'nullable|string',
+            'status'      => 'nullable|in:Aktif,Coming Soon,Non-Aktif',
+            'facilities'  => 'nullable|array',
+            'facilities.*'=> 'string',
+            'description' => 'nullable|string',
+            'image'       => 'nullable|string',
         ]);
 
         $accommodation->update($validated);
@@ -94,3 +109,4 @@ class AccommodationController extends Controller
         ]);
     }
 }
+

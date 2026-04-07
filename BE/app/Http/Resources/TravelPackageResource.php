@@ -36,6 +36,8 @@ class TravelPackageResource extends JsonResource
             'best_for' => $this->best_for,
             'description' => $this->description,
             'seats' => $this->quota,
+            'photo' => $this->photo ? asset('storage/' . $this->photo) : null,
+            'accommodation_id' => $this->accommodation_id,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

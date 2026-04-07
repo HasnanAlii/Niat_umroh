@@ -53,8 +53,10 @@ export const AdminTempat = () => {
     location: "",
     address: "",
     rating: "",
-    description: ""
+    description: "",
+    facilities: []
   })
+  const [facilityInput, setFacilityInput] = useState("")
   
   const fetchAccommodations = async () => {
     try {
@@ -86,8 +88,10 @@ export const AdminTempat = () => {
       location: "",
       address: "",
       rating: "",
-      description: ""
+      description: "",
+      facilities: []
     })
+    setFacilityInput("")
   }
   
   // Handle create
@@ -137,8 +141,10 @@ export const AdminTempat = () => {
       location: place.location || "",
       address: place.address || "",
       rating: place.rating || "",
-      description: place.description || ""
+      description: place.description || "",
+      facilities: Array.isArray(place.facilities) ? place.facilities : []
     })
+    setFacilityInput("")
     setShowEditModal(true)
   }
   
@@ -254,7 +260,7 @@ export const AdminTempat = () => {
   const getTypeIcon = (type) => {
     switch(type) {
       case "Hotel": return <Hotel className="h-4 w-4" />
-      case "Bandara": return <Plane className="h-4 w-4" />
+      case "Maskapai": return <Plane className="h-4 w-4" />
       case "Pemondokan": return <Home className="h-4 w-4" />
       default: return <Building className="h-4 w-4" />
     }
@@ -264,7 +270,7 @@ export const AdminTempat = () => {
   const getTypeBadge = (type) => {
     switch(type) {
       case "Hotel": return <Badge className="bg-blue-100 text-blue-800">{type}</Badge>
-      case "Bandara": return <Badge className="bg-purple-100 text-purple-800">{type}</Badge>
+      case "Maskapai": return <Badge className="bg-purple-100 text-purple-800">{type}</Badge>
       case "Pemondokan": return <Badge className="bg-green-100 text-green-800">{type}</Badge>
       default: return <Badge variant="outline">{type}</Badge>
     }
@@ -273,7 +279,7 @@ export const AdminTempat = () => {
   const normalizedType = (type) => {
     const t = String(type || "").toLowerCase()
     if (t.includes("hotel")) return "Hotel"
-    if (t.includes("bandara")) return "Bandara"
+    if (t.includes("maskapai")) return "Maskapai"
     if (t.includes("pemondokan")) return "Pemondokan"
     return "Lainnya"
   }
@@ -336,7 +342,7 @@ export const AdminTempat = () => {
             Manajemen Tempat & Akomodasi
           </h1>
           <p className="text-sm sm:text-base text-gray-600">
-            Kelola hotel, bandara, dan fasilitas jamaah
+            Kelola hotel, Maskapai, dan fasilitas jamaah
           </p>
         </div>
         
@@ -427,7 +433,7 @@ export const AdminTempat = () => {
                 <div>
                   <CardTitle>Daftar Tempat & Akomodasi</CardTitle>
                   <CardDescription>
-                    Hotel, bandara, dan fasilitas pendukung
+                    Hotel, Maskapai, dan fasilitas pendukung
                   </CardDescription>
                 </div>
                 
@@ -452,9 +458,9 @@ export const AdminTempat = () => {
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                       <DropdownMenuItem onClick={() => setTypeFilter("semua")}>Semua</DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => setTypeFilter("Hotel")}>Hotel</DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => setTypeFilter("Bandara")}>Bandara</DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => setTypeFilter("Pemondokan")}>Pemondokan</DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => setTypeFilter("hotel Mekah")}>Hotel Mekah</DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => setTypeFilter("Maskapai")}>Maskapai</DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => setTypeFilter("hotel Madinah")}>Hotel Madinah</DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </div>
@@ -470,25 +476,25 @@ export const AdminTempat = () => {
                   Semua
                 </Button>
                 <Button
-                  variant={typeFilter === "Hotel" ? "default" : "outline"}
+                  variant={typeFilter === "hotel Mekah" ? "default" : "outline"}
                   size="sm"
-                  onClick={() => setTypeFilter("Hotel")}
+                  onClick={() => setTypeFilter("hotel Mekah")}
                 >
-                  Hotel
+                  Hotel Mekah
                 </Button>
                 <Button
-                  variant={typeFilter === "Bandara" ? "default" : "outline"}
+                  variant={typeFilter === "Maskapai" ? "default" : "outline"}
                   size="sm"
-                  onClick={() => setTypeFilter("Bandara")}
+                  onClick={() => setTypeFilter("Maskapai")}
                 >
-                  Bandara
+                  Maskapai
                 </Button>
                 <Button
-                  variant={typeFilter === "Pemondokan" ? "default" : "outline"}
+                  variant={typeFilter === "hotel Madinah" ? "default" : "outline"}
                   size="sm"
-                  onClick={() => setTypeFilter("Pemondokan")}
+                  onClick={() => setTypeFilter("hotel Madinah")}
                 >
-                  Pemondokan
+                  Hotel Madinah
                 </Button>
               </div>
             </CardHeader>
@@ -595,29 +601,22 @@ export const AdminTempat = () => {
                 Tambah Tempat Baru
               </CardTitle>
               <CardDescription>
-                Tambah hotel, bandara, atau fasilitas baru
+                Tambah hotel, maskapai, atau fasilitas baru
               </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                <Button className="w-full" variant="outline" onClick={() => openCreateWithType("Hotel")}>
+                <Button className="w-full" variant="outline" onClick={() => openCreateWithType("hotel Mekah")}> 
                   <Hotel className="h-4 w-4 mr-2" />
-                  Tambah Hotel
+                  Tambah Hotel Mekah
                 </Button>
-                
-                <Button className="w-full" variant="outline" onClick={() => openCreateWithType("Bandara")}>
-                  <Plane className="h-4 w-4 mr-2" />
-                  Tambah Bandara
-                </Button>
-                
-                <Button className="w-full" variant="outline" onClick={() => openCreateWithType("Pemondokan")}>
+                <Button className="w-full" variant="outline" onClick={() => openCreateWithType("hotel Madinah")}> 
                   <Home className="h-4 w-4 mr-2" />
-                  Tambah Pemondokan
+                  Tambah Hotel Madinah
                 </Button>
-                
-                <Button className="w-full" variant="outline" onClick={() => openCreateWithType("Lainnya")}>
-                  <Building className="h-4 w-4 mr-2" />
-                  Tambah Fasilitas Lain
+                <Button className="w-full" variant="outline" onClick={() => openCreateWithType("Maskapai")}> 
+                  <Plane className="h-4 w-4 mr-2" />
+                  Tambah Maskapai
                 </Button>
               </div>
             </CardContent>
@@ -706,10 +705,9 @@ export const AdminTempat = () => {
                 disabled={submitting}
               >
                 <option value="">Pilih tipe</option>
-                <option value="Hotel">Hotel</option>
-                <option value="Bandara">Bandara</option>
-                <option value="Pemondokan">Pemondokan</option>
-                <option value="Lainnya">Lainnya</option>
+                <option value="hotel Mekah">Hotel Mekah</option>
+                <option value="Maskapai">Maskapai</option>
+                <option value="hotel Madinah">Hotel Madinah</option>
               </select>
             </div>
             
@@ -754,6 +752,68 @@ export const AdminTempat = () => {
             />
           </div>
           
+          {/* Fasilitas */}
+          <div>
+            <label className="block text-sm font-medium mb-2">Fasilitas</label>
+            <div className="flex gap-2 mb-2">
+              <Input
+                placeholder="Tambah fasilitas (contoh: WiFi, AC, Kolam Renang)"
+                value={facilityInput}
+                onChange={(e) => setFacilityInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && facilityInput.trim()) {
+                    e.preventDefault()
+                    const trimmed = facilityInput.trim()
+                    if (!formData.facilities.includes(trimmed)) {
+                      setFormData({ ...formData, facilities: [...formData.facilities, trimmed] })
+                    }
+                    setFacilityInput("")
+                  }
+                }}
+                disabled={submitting}
+              />
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => {
+                  const trimmed = facilityInput.trim()
+                  if (trimmed && !formData.facilities.includes(trimmed)) {
+                    setFormData({ ...formData, facilities: [...formData.facilities, trimmed] })
+                  }
+                  setFacilityInput("")
+                }}
+                disabled={submitting || !facilityInput.trim()}
+              >
+                <Plus className="h-4 w-4" />
+              </Button>
+            </div>
+            {formData.facilities.length > 0 && (
+              <div className="flex flex-wrap gap-2 p-3 bg-gray-50 rounded-lg border border-dashed border-gray-200">
+                {formData.facilities.map((f, i) => (
+                  <span
+                    key={i}
+                    className="inline-flex items-center gap-1 px-3 py-1 bg-primary/10 text-primary text-sm rounded-full border border-primary/20"
+                  >
+                    {f}
+                    <button
+                      type="button"
+                      className="ml-1 hover:text-red-500 transition-colors"
+                      onClick={() => setFormData({
+                        ...formData,
+                        facilities: formData.facilities.filter((_, idx) => idx !== i)
+                      })}
+                    >
+                      ×
+                    </button>
+                  </span>
+                ))}
+              </div>
+            )}
+            {formData.facilities.length === 0 && (
+              <p className="text-xs text-gray-400 mt-1">Tekan Enter atau klik + untuk menambah fasilitas</p>
+            )}
+          </div>
+
           <div>
             <label className="block text-sm font-medium mb-2">
               Deskripsi
@@ -836,10 +896,9 @@ export const AdminTempat = () => {
                 disabled={submitting}
               >
                 <option value="">Pilih tipe</option>
-                <option value="Hotel">Hotel</option>
-                <option value="Bandara">Bandara</option>
-                <option value="Pemondokan">Pemondokan</option>
-                <option value="Lainnya">Lainnya</option>
+                <option value="hotel Mekah">Hotel Mekah</option>
+                <option value="Maskapai">Maskapai</option>
+                <option value="hotel Madinah">Hotel Madinah</option>
               </select>
             </div>
             
@@ -884,6 +943,68 @@ export const AdminTempat = () => {
             />
           </div>
           
+          {/* Fasilitas */}
+          <div>
+            <label className="block text-sm font-medium mb-2">Fasilitas</label>
+            <div className="flex gap-2 mb-2">
+              <Input
+                placeholder="Tambah fasilitas (contoh: WiFi, AC, Kolam Renang)"
+                value={facilityInput}
+                onChange={(e) => setFacilityInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && facilityInput.trim()) {
+                    e.preventDefault()
+                    const trimmed = facilityInput.trim()
+                    if (!formData.facilities.includes(trimmed)) {
+                      setFormData({ ...formData, facilities: [...formData.facilities, trimmed] })
+                    }
+                    setFacilityInput("")
+                  }
+                }}
+                disabled={submitting}
+              />
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => {
+                  const trimmed = facilityInput.trim()
+                  if (trimmed && !formData.facilities.includes(trimmed)) {
+                    setFormData({ ...formData, facilities: [...formData.facilities, trimmed] })
+                  }
+                  setFacilityInput("")
+                }}
+                disabled={submitting || !facilityInput.trim()}
+              >
+                <Plus className="h-4 w-4" />
+              </Button>
+            </div>
+            {formData.facilities.length > 0 && (
+              <div className="flex flex-wrap gap-2 p-3 bg-gray-50 rounded-lg border border-dashed border-gray-200">
+                {formData.facilities.map((f, i) => (
+                  <span
+                    key={i}
+                    className="inline-flex items-center gap-1 px-3 py-1 bg-primary/10 text-primary text-sm rounded-full border border-primary/20"
+                  >
+                    {f}
+                    <button
+                      type="button"
+                      className="ml-1 hover:text-red-500 transition-colors"
+                      onClick={() => setFormData({
+                        ...formData,
+                        facilities: formData.facilities.filter((_, idx) => idx !== i)
+                      })}
+                    >
+                      ×
+                    </button>
+                  </span>
+                ))}
+              </div>
+            )}
+            {formData.facilities.length === 0 && (
+              <p className="text-xs text-gray-400 mt-1">Tekan Enter atau klik + untuk menambah fasilitas</p>
+            )}
+          </div>
+
           <div>
             <label className="block text-sm font-medium mb-2">
               Deskripsi
@@ -1007,37 +1128,92 @@ export const AdminTempat = () => {
         size="lg"
       >
         {selectedPlace && (
-          <div className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="space-y-5">
+
+            {/* Header — nama, tipe, status */}
+            <div className="flex items-start justify-between gap-3">
               <div>
-                <p className="text-sm text-gray-600">Nama</p>
-                <p className="font-medium">{selectedPlace.name || "-"}</p>
+                <h3 className="text-xl font-bold text-gray-900">{selectedPlace.name || "-"}</h3>
+                <div className="flex items-center gap-2 mt-2 flex-wrap">
+                  {getTypeBadge(selectedPlace.type)}
+                </div>
               </div>
-              <div>
-                <p className="text-sm text-gray-600">Tipe</p>
-                <div className="mt-1">{getTypeBadge(selectedPlace.type)}</div>
-              </div>
-              <div>
-                <p className="text-sm text-gray-600">Lokasi</p>
-                <p className="font-medium">{selectedPlace.location || "-"}</p>
-              </div>
-              <div>
-                <p className="text-sm text-gray-600">Rating</p>
-                <p className="font-medium">{selectedPlace.rating || "-"}</p>
+              {/* Rating */}
+              <div className="flex flex-col items-end shrink-0">
+                <div className="flex items-center gap-1">
+                  {[1,2,3,4,5].map(s => (
+                    <Star
+                      key={s}
+                      className={`h-4 w-4 ${s <= Math.round(Number(selectedPlace.rating || 0)) ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300'}`}
+                    />
+                  ))}
+                </div>
+                <span className="text-sm font-semibold text-gray-700 mt-1">{selectedPlace.rating || '0'} / 5</span>
               </div>
             </div>
 
-            <div>
-              <p className="text-sm text-gray-600">Alamat</p>
-              <p className="font-medium">{selectedPlace.address || "-"}</p>
+            {/* Info Grid */}
+            <div className="grid grid-cols-2 gap-3">
+              <div className="p-3 bg-gray-50 rounded-lg">
+                <p className="text-xs text-gray-500 mb-1">Lokasi</p>
+                <p className="font-semibold text-sm">{selectedPlace.location || "-"}</p>
+              </div>
+              <div className="p-3 bg-gray-50 rounded-lg">
+                <p className="text-xs text-gray-500 mb-1">Tipe</p>
+                <p className="font-semibold text-sm">{selectedPlace.type || "-"}</p>
+              </div>
+              {selectedPlace.capacity && (
+                <div className="p-3 bg-gray-50 rounded-lg">
+                  <p className="text-xs text-gray-500 mb-1">Kapasitas</p>
+                  <p className="font-semibold text-sm">{selectedPlace.capacity}</p>
+                </div>
+              )}
+              {selectedPlace.price && (
+                <div className="p-3 bg-gray-50 rounded-lg">
+                  <p className="text-xs text-gray-500 mb-1">Harga</p>
+                  <p className="font-semibold text-sm">{selectedPlace.price}</p>
+                </div>
+              )}
             </div>
 
-            <div>
-              <p className="text-sm text-gray-600">Deskripsi</p>
-              <p className="font-medium">{selectedPlace.description || "-"}</p>
-            </div>
+            {/* Alamat */}
+            {selectedPlace.address && (
+              <div className="flex items-start gap-2 p-3 bg-gray-50 rounded-lg">
+                <MapPin className="h-4 w-4 text-gray-400 mt-0.5 shrink-0" />
+                <div>
+                  <p className="text-xs text-gray-500 mb-0.5">Alamat Lengkap</p>
+                  <p className="text-sm font-medium text-gray-800">{selectedPlace.address}</p>
+                </div>
+              </div>
+            )}
 
-            <div className="flex gap-3 pt-4">
+            {/* Fasilitas */}
+            {selectedPlace.facilities && Array.isArray(selectedPlace.facilities) && selectedPlace.facilities.length > 0 && (
+              <div>
+                <p className="text-sm font-semibold text-gray-700 mb-2">Fasilitas</p>
+                <div className="flex flex-wrap gap-2">
+                  {selectedPlace.facilities.map((f, i) => (
+                    <span
+                      key={i}
+                      className="inline-flex items-center px-3 py-1 bg-primary/10 text-primary text-sm rounded-full border border-primary/20"
+                    >
+                      {f}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Deskripsi */}
+            {selectedPlace.description && (
+              <div className="p-4 bg-blue-50 border border-blue-100 rounded-lg">
+                <p className="text-xs font-semibold text-blue-700 mb-1 uppercase tracking-wide">Deskripsi</p>
+                <p className="text-sm text-gray-700 leading-relaxed">{selectedPlace.description}</p>
+              </div>
+            )}
+
+            {/* Action buttons */}
+            <div className="flex gap-3 pt-2">
               <Button
                 variant="outline"
                 className="flex-1"
