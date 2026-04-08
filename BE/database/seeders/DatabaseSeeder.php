@@ -29,12 +29,12 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $this->call([
-            TravelPackageSeeder::class,
-            AccommodationSeeder::class,
-            JamaahSeeder::class,
-            TabunganSeeder::class,
-            DocumentSeeder::class,
-            PaymentSeeder::class,
+            // TravelPackageSeeder::class,
+            // AccommodationSeeder::class,
+            // JamaahSeeder::class,
+            // TabunganSeeder::class,
+            // DocumentSeeder::class,
+            // PaymentSeeder::class,
         ]);
     }
 }
