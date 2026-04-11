@@ -19,7 +19,9 @@ import {
   ChevronDown,
   MoreHorizontal,
   Loader2,
-  FileText
+  FileText,
+  PlusCircle,
+  PlusIcon
 } from "lucide-react"
 import { useState, useEffect } from "react"
 import apiClient from "@/api/apiClient"
@@ -42,9 +44,52 @@ export const AdminTabungan = () => {
   const [showRejectModal, setShowRejectModal] = useState(false)
   const [showReceiptModal, setShowReceiptModal] = useState(false)
   const [showDetailModal, setShowDetailModal] = useState(false)
+  const [showManualDepositModal, setShowManualDepositModal] = useState(false)
   const [selectedPayment, setSelectedPayment] = useState(null)
   const [selectedTabungan, setSelectedTabungan] = useState(null)
   const [rejectReason, setRejectReason] = useState("")
+
+  // Manual deposit state
+  const [depositJamaahId, setDepositJamaahId] = useState("")
+  const [depositAmount, setDepositAmount] = useState("")
+  const [depositNote, setDepositNote] = useState("")
+  // Handle manual deposit
+  const handleManualDeposit = async () => {
+    if (!depositJamaahId || !depositAmount || isNaN(Number(depositAmount))) {
+      toast({
+        title: "Error",
+        description: "Pilih jamaah dan masukkan nominal yang valid",
+        variant: "destructive"
+      })
+      return
+    }
+    setSubmitting(true)
+    try {
+      await apiClient.manualDeposit({
+        jamaah_id: depositJamaahId,
+        amount: Number(depositAmount),
+        note: depositNote
+      })
+      toast({
+        title: "Berhasil!",
+        description: "Tabungan berhasil ditambahkan",
+        variant: "success"
+      })
+      setShowManualDepositModal(false)
+      setDepositJamaahId("")
+      setDepositAmount("")
+      setDepositNote("")
+      fetchData()
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: error.message || "Gagal menambah tabungan",
+        variant: "destructive"
+      })
+    } finally {
+      setSubmitting(false)
+    }
+  }
 
   
   // Fetch all data
@@ -312,6 +357,10 @@ const filteredTabungan = tabunganData.filter((item) => {
           </div>
           
           <div className="flex items-center gap-3">
+            <Button variant="default" onClick={() => setShowManualDepositModal(true)}>
+              <PlusIcon className="h-4 w-4 mr-2" />
+              Input Menabung
+            </Button>
             <Button variant="outline" onClick={handleExport}>
               <Download className="h-4 w-4 mr-2" />
               Export Laporan
@@ -969,6 +1018,91 @@ const filteredTabungan = tabunganData.filter((item) => {
             </div>
           </div>
         )}
+      </Modal>
+
+      {/* Manual Deposit Modal */}
+      <Modal
+        isOpen={showManualDepositModal}
+        onClose={() => {
+          setShowManualDepositModal(false)
+          setDepositJamaahId("")
+          setDepositAmount("")
+          setDepositNote("")
+        }}
+        title="Input Menabung Jamaah"
+        size="md"
+      >
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium mb-2">Nama Jamaah <span className="text-red-500">*</span></label>
+            <select
+              className="w-full border rounded px-3 py-2 focus:outline-none focus:ring"
+              value={depositJamaahId}
+              onChange={e => setDepositJamaahId(e.target.value)}
+              disabled={submitting}
+            >
+              <option value="">Pilih Jamaah...</option>
+              {tabunganData.map((t) => (
+                <option key={t.jamaah?.id || t.jamaah_id} value={t.jamaah?.id || t.jamaah_id}>
+                  {t.jamaah?.name || '-'} ({t.jamaah?.nik || '-'})
+                </option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-2">Nominal <span className="text-red-500">*</span></label>
+            <Input
+              type="number"
+              min="1000"
+              placeholder="Masukkan nominal..."
+              value={depositAmount}
+              onChange={e => setDepositAmount(e.target.value)}
+              disabled={submitting}
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-2">Catatan</label>
+            <Textarea
+              placeholder="Opsional: catatan tambahan"
+              value={depositNote}
+              onChange={e => setDepositNote(e.target.value)}
+              disabled={submitting}
+              rows={3}
+            />
+          </div>
+          <div className="flex gap-3 pt-4">
+            <Button
+              variant="outline"
+              onClick={() => {
+                setShowManualDepositModal(false)
+                setDepositJamaahId("")
+                setDepositAmount("")
+                setDepositNote("")
+              }}
+              disabled={submitting}
+              className="flex-1"
+            >
+              Batal
+            </Button>
+            <Button
+              onClick={handleManualDeposit}
+              disabled={submitting || !depositJamaahId || !depositAmount}
+              className="flex-1"
+            >
+              {submitting ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  Memproses...
+                </>
+              ) : (
+                <>
+                  <CheckCircle className="h-4 w-4 mr-2" />
+                  Simpan
+                </>
+              )}
+            </Button>
+          </div>
+        </div>
       </Modal>
     </div>
   )

@@ -639,6 +639,20 @@ const apiClient = {
 
     return blob;
   },
+
+  // Manual deposit by admin
+  async manualDeposit({ jamaah_id, amount, note }) {
+    return apiCall('/payments', {
+      method: 'POST',
+      headers: createHeaders(true),
+      body: JSON.stringify({
+        jamaah_id,
+        amount,
+        note,
+        type: 'manual',
+      }),
+    });
+  },
 };
 
 export default apiClient;
