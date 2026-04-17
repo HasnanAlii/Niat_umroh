@@ -4,9 +4,12 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Jamaah;
+use App\Models\Tabungan;
+use App\Models\TravelPackage;
 use App\Models\User;
 use App\Http\Resources\JamaahResource;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class JamaahController extends Controller
 {
@@ -41,22 +44,31 @@ class JamaahController extends Controller
             'status' => 'nullable|in:pending,confirmed,completed,cancelled',
         ]);
 
-        // Create user account for Jamaah
-        $user = User::create([
-            'name' => $validated['name'],
-            'email' => $validated['email'],
-            'password' => 'password', // Will be hashed by model mutator
-            'role' => 'jamaah',
-        ]);
+        $jamaah = DB::transaction(function () use ($validated) {
+            // Create user account for Jamaah
+            $user = User::create([
+                'name' => $validated['name'],
+                'email' => $validated['email'],
+                'password' => 'password', // Will be hashed by model mutator
+                'role' => 'jamaah',
+            ]);
 
+            $jamaahData = $validated;
+            $jamaahData['user_id'] = $user->id;
+            $jamaahData['registration_date'] = now();
 
-        // Add user_id to Jamaah
-        $validated['user_id'] = $user->id;
+            $jamaah = Jamaah::create($jamaahData);
 
-        $registeredDate = now();
-        $validated['registration_date'] = $registeredDate;
-        $jamaah = Jamaah::create($validated);
-        return new JamaahResource($jamaah);
+            $this->syncTabungan(
+                $jamaah,
+                $jamaahData['travel_package_id'] ?? null,
+                $validated['total_paid'] ?? 0
+            );
+
+            return $jamaah;
+        });
+
+        return new JamaahResource($jamaah->load(['travelPackage', 'tabungan']));
     }
 
     public function update(Request $request, $id)
@@ -74,8 +86,22 @@ class JamaahController extends Controller
             'status' => 'nullable|in:pending,confirmed,completed,cancelled',
         ]);
 
-        $jamaah->update($validated);
-        return new JamaahResource($jamaah);
+        DB::transaction(function () use ($jamaah, $validated) {
+            $jamaah->update($validated);
+
+            $updatedJamaah = $jamaah->fresh();
+            $travelPackageId = $validated['travel_package_id'] ?? $updatedJamaah->travel_package_id;
+
+            if ($travelPackageId) {
+                $this->syncTabungan(
+                    $updatedJamaah,
+                    $travelPackageId,
+                    $validated['total_paid'] ?? null
+                );
+            }
+        });
+
+        return new JamaahResource($jamaah->fresh()->load(['travelPackage', 'tabungan']));
     }
 
     public function destroy($id)
@@ -84,5 +110,39 @@ class JamaahController extends Controller
         $jamaah->delete();
         
         return response()->json(['message' => 'Jamaah deleted successfully']);
+    }
+
+    private function syncTabungan(Jamaah $jamaah, ?int $travelPackageId, ?float $currentAmount = null): void
+    {
+        if (!$travelPackageId) {
+            return;
+        }
+
+        $travelPackage = TravelPackage::findOrFail($travelPackageId);
+
+        $tabungan = Tabungan::firstOrNew([
+            'jamaah_id' => $jamaah->id,
+        ]);
+
+        $tabungan->travel_package_id = $travelPackage->id;
+        $tabungan->target_amount = $travelPackage->price;
+        $tabungan->monthly_payment = $tabungan->monthly_payment ?? 1000000;
+
+        if ($currentAmount !== null) {
+            $tabungan->current_amount = $currentAmount;
+        } else {
+            $tabungan->current_amount = $tabungan->current_amount ?? 0;
+        }
+
+        $tabungan->progress = $tabungan->target_amount > 0
+            ? min(100, (int) round(($tabungan->current_amount / $tabungan->target_amount) * 100))
+            : 0;
+        $tabungan->status = $tabungan->status ?? 'Berjalan';
+
+        if (!$tabungan->next_payment_date) {
+            $tabungan->next_payment_date = now()->addDays(30);
+        }
+
+        $tabungan->save();
     }
 }
